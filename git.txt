@@ -1,0 +1,96 @@
+4. GIT 実験 / まとめ
+
+    ssh による git server を立てる
+
+    使用手順をまとめる
+
+        タグを作ってみる
+
+        svn との違い
+
+            機能対応表
+
+                リポジトリ作成
+
+                update
+
+                checkout
+
+                add
+
+                del
+
+                commit
+
+                revert
+
+                branch
+
+                merge
+
+            SVNにない機能
+
+                ローカルリポジトリ
+
+                    git push origin master
+
+                リモートリポジトリ
+
+                    git push origin master
+
+                branch
+
+                    作成
+
+                    切り替え
+
+                        git checkout branch_name
+
+                    マージ
+
+                    削除
+
+        実際の運用方法：
+
+            開発の方法
+
+                既存のリポジトリのワーキングコピーを取得する
+
+                    git clone URL
+
+                新しく自分で作成する
+
+                    git init
+
+                    git add
+
+                    git commit
+
+                        git push origin master
+
+                        git push origin branch
+
+                gitflow
+
+            客先ごとのカスタマイズ
+
+                ブランチ
+
+                    共通のコードベースの維持
+
+
+        内部構造
+
+            SVN, CVSのような差分バックアップ方式とは大きく異なる
+
+            ローカルディレクトリにリポジトリがある
+
+                project/.git/
+
+            リポジトリとはすなわち.git以下のファイルの事
+
+                .git/objects/以下に全てのファイルを圧縮して格納する
+
+                ハッシュ値
+
+            クローンした場合
