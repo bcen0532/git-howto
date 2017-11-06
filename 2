@@ -1,0 +1,131 @@
+# gitの使い方
+
+参考資料：
+https://git-scm.com/book/ja/v2/
+
+### リポジトリを新規に作成する（ローカル）
+
+git init
+
+## リポジトリに送信先サーバーを設定する
+
+git remote add origin <url>
+
+## サーバー（リモート）からリポジトリをクローンする
+
+git clone <url>
+
+## リポジトリに次回コミットするファイルを追加する
+
+git add ファイル名
+
+## リポジトリにコミットする
+
+git commit -m 'comment'
+
+## タグを付与する
+
+※先にコミットすること
+
+## git tag -a <tag> -m 'comment'
+
+
+## 変更をサーバーに送信する
+
+git push orgin <ブランチ名>
+
+例）
+マスタブランチを送信したい場合
+
+git push origin master
+
+
+## ブランチの一覧を見る
+
+git branch
+
+## ブランチを作成する
+
+git branch \<branch>
+
+## ブランチを切り替える
+
+git checkout \<branch>
+
+
+## ブランチを統合(マージ)する
+
+例) masterブランチにhotfixブランチを統合するとする
+
+git checkout master
+
+git merge hotfix
+
+※コンフリクトがある場合、修正するように表示されます。
+その場合、
+ファイルを修正
+git add <修正済みファイル>
+git commit
+するとマージ後修正済みのコミットが新たにつくられます。
+
+
+## ブランチ削除
+
+git branch -d <branch>
+
+## コミットしたくないファイルを指定（メモ書き、バージョンごとに違う等)
+
+<project_root>/.gitignore を編集
+
+
+# 実例
+
+前提：SSH等でローカルはサーバー側リポジトリにアクセス可能とする
+複数リポジトリ間でのやり取りも出来るが、単純化するためにサーバー側をリモート、
+それに対して作業者がアクセスするとする
+
+1.中央リポジトリを作る
+    既存のプロジェクトディレクトリをコピーする
+    .svn を削除する
+    (もしくは.gitignoreに.svnを指定してコミット対象から外す)
+    git init する
+    git add * する
+    git commit する
+
+2. ローカルでクローンする
+    git clone <ripsitory url>
+
+3 開発用ブランチを作る
+    developブランチを作る
+    git branch develop
+
+    developブランチに移動する
+    git checkout develop
+
+    (作業する)
+    git add *
+    git commit
+
+    masterブランチに切り替える
+    git checkout master
+
+    masterの変更をリモートから取り寄せ、最新にアップデートする
+    git pull origin master
+
+    developブランチをマージする
+    git merge develop
+
+    (コンフリクトが出た場合、コンフリクトを修正してコミット)
+    git add <conflicted files>
+    git commit
+
+
+    変更されたマスタブランチをリモートに送信する
+    git push origin master
+
+    developブランチが不要の場合,削除する
+    git branch -d develop
+
+
+4. 客先に合わせて
+2. マスタブランチ

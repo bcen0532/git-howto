@@ -1,0 +1,205 @@
+# gitの使い方
+
+参考資料：
+https://git-scm.com/book/ja/v2/
+
+## リポジトリを新規に作成する（ローカル）
+
+> git init
+
+## サーバー側で空リポジトリを作成する
+(DBのみ)
+
+> git init --bare --shared
+
+## リポジトリに送信先サーバーを設定する
+
+> git remote add origin <url>
+
+## サーバー（リモート）からリポジトリをクローンする
+
+> git clone <url>
+
+## リポジトリに次回コミットするファイルを追加する
+
+> git add <file>
+
+## ファイルの変更を無かったことにする(コミット前）
+
+> git checkout <file>
+
+## ローカルリポジトリにコミットする
+
+> git commit -m 'comment'
+
+## タグを付与する
+
+> # 先にコミットすること
+> git tag -a <tag> -m 'comment'
+
+## サーバーの送信先を設定する
+
+> git remote add origin <url>
+
+もしくは
+
+./git/config内のファイルを直接編集
+
+
+※リモートからクローンした場合にはデフォルトで設定されている
+
+
+## 変更をサーバーに送信する
+
+> git push orgin <ブランチ名>
+
+例）
+マスタブランチを送信したい場合
+
+> git push origin master
+
+
+## ブランチの一覧を見る
+
+> git branch
+
+## ブランチを作成する
+
+> git branch \<branch>
+
+## ブランチを切り替える
+
+> git checkout \<branch>
+
+
+## ブランチを統合(マージ)する
+
+例) masterブランチにhotfixブランチを統合するとする
+
+> # マスタに切り替え
+> git checkout master
+> # hotfixブランチを統合
+> git merge hotfix
+
+※コンフリクトがある場合、修正するように表示されます。
+その場合、
+ファイルを修正
+git add <修正済みファイル>
+git commit
+するとマージ後修正済みのコミットが新たにつくられます。
+
+
+## ブランチ削除
+
+> git branch -d <branch>
+
+## コミットしたくないファイルを指定（メモ書き、バージョンごとに違う等)
+
+> \<project_root>/.gitignore を編集
+
+
+# 実際の使用の流れ
+
+前提：SSH等でローカルはサーバー側リポジトリにアクセス可能とする
+複数リポジトリ間でのやり取りも出来るが、単純化するためにサーバー側をリモート、
+それに対して作業者がアクセスするとする
+
+1.中央リポジトリを作る
+    既存のプロジェクトディレクトリをコピーする
+    .svn があれば削除する
+    git init する
+    git add * する
+    git commit する
+    以上によりマスタリポジトリが作成される。
+
+2. ローカルでクローンする
+    > git clone <ripsitory url>
+
+3 ローカルで開発用ブランチを作る
+    例）CSS外観用調整用ブランチを作る
+    > git branch cssfix
+
+    developブランチに移動する
+    > git checkout cssfix
+
+    (ローカルで作業する)
+    > git add bcen.css
+    > git commit
+
+    masterブランチに切り替える
+    > git checkout master
+
+    masterの変更を最新にアップデートする
+    > git pull origin master
+
+    developブランチをマージする
+    > git merge cssfix
+
+    (コンフリクトが出た場合修正)
+    その後
+    > git add <fixed files>
+
+    (マージをコミット)
+    > git commit
+
+
+    変更されたマスタブランチをリモートに送信する
+    > git push origin master
+
+    developブランチがもう不要の場合,削除する
+    > git branch -d develop
+
+
+
+4. 客先に合わせてブランチを分岐させる
+    サーバー側リポジトリで客先用ブランチを作る
+
+    [サーバー側]
+    > git branch takatoku
+    > git branch segawa
+
+    クローン後、ブランチを指定して作業する
+
+    [クライアント側]
+    > git clone <url>
+    > git checkout takatoku
+
+    (作業...)
+
+    変更された客先用ブランチをリモートに送信する
+
+    > git push origin takatoku
+
+    * マスタブランチ側との部分マージ
+    サーバー側での更新を取得
+    > git pull origin master
+
+    マスタブランチとの差分を表示する
+    > git diff takatoku master
+
+    a) マスタブランチの変更をフルマージして、その後コンフリクトを修正する場合
+    > git merge master
+    (コンフリクト修正)
+    > git add files
+    > git commit
+    ※ マージしてもマージしたブランチはそのまま残る
+
+    b)ファイル単位でマスタブランチからの変更を取込たい場合
+    > git checkout master -- <file>
+
+
+5. 自分のローカルで作成したリポジトリをサーバー側に登録したい時
+    * 複数方法ある。一番簡単なやり方
+    ssh サーバー等の場合
+    [サーバー側]
+    ssh等でサーバーにログイン
+    プロジェクト名で空ディレクトリを作る
+
+    > cd project
+    > git init --bare --shared
+
+    [ローカル側]
+    > git add remote origin <url>
+    > git push origin master
+
+
